@@ -1,2 +1,2 @@
-# CLimate Comparer App
+# Climate Comparer App
 This app is currently in progress. It is created for my Software Engineering I course at Oregon State University. This app is meant to compare climate data from cities around the world for travelers or those planning to move to allow them extract and compare only the most necessary information and nothing else. The UI is constructed with React and will run off on Netlfiy. More information is coming soon...
