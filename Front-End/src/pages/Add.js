@@ -8,7 +8,7 @@ const Add = () => {
     //React code
     const [reactCity, setCity]        = useState('');
     const [reactState, setState]      = useState('');
-    const [reactResult, setResult]    = useState('');
+    const [reactResult, setResult]    = useState(''); //includes all climate data 
     const history = useNavigate();
 
 
