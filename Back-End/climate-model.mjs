@@ -23,43 +23,44 @@ db.once("open", (err) => {
 const cityClimateSchema = mongoose.Schema({
 	city: { type: String, required: true },
     state: { type: String, required: true },
-    country: { type: String, required: true },
-    Jan: { type: Object, required: true },
-    Feb: { type: Object, required: true },
-    Mar: { type: Object, required: true },
-    Apr: { type: Object, required: true },
-    May: { type: Object, required: true },
-    Jun: { type: Object, required: true },
-    Jul: { type: Object, required: true },
-    Aug: { type: Object, required: true },
-    Sep: { type: Object, required: true },
-    Oct: { type: Object, required: true },
-    Nov: { type: Object, required: true },
-    Dec: { type: Object, required: true },
+    result: { type: Object, required: true }
+    // country: { type: String, required: true },
+    // Jan: { type: Object, required: true },
+    // Feb: { type: Object, required: true },
+    // Mar: { type: Object, required: true },
+    // Apr: { type: Object, required: true },
+    // May: { type: Object, required: true },
+    // Jun: { type: Object, required: true },
+    // Jul: { type: Object, required: true },
+    // Aug: { type: Object, required: true },
+    // Sep: { type: Object, required: true },
+    // Oct: { type: Object, required: true },
+    // Nov: { type: Object, required: true },
+    // Dec: { type: Object, required: true },
 });
 
 // Compile the model from the schema.
 const CityClimate = mongoose.model("CityClimate", cityClimateSchema);
 
 // CREATE model *****************************************
-const createCityClimate = async (city, state, country, Jan, Feb, Mar, Apr, May, Jun, Jul,
-    Aug, Sep, Oct, Nov, Dec ) => {
+const createCityClimate = async (city, state, result ) => {
     const cityClimate = new CityClimate({ 
         city: city,
         state: state,
-        country: country,
-        Jan: Jan,
-        Feb: Feb,
-        Mar: Mar,
-        Apr: Apr,
-        May: May,
-        Jun: Jun,
-        Jul: Jul,
-        Aug: Aug,
-        Sep: Sep,
-        Oct: Oct,
-        Nov: Nov,
-        Dec: Dec 
+        result: result
+        // country: country,
+        // Jan: Jan,
+        // Feb: Feb,
+        // Mar: Mar,
+        // Apr: Apr,
+        // May: May,
+        // Jun: Jun,
+        // Jul: Jul,
+        // Aug: Aug,
+        // Sep: Sep,
+        // Oct: Oct,
+        // Nov: Nov,
+        // Dec: Dec 
     });
     return cityClimate.save();
 }
