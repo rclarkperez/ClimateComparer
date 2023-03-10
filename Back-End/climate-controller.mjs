@@ -210,6 +210,6 @@ app.put('/climates/:_id', (req, res) => {
     });
 });
 
-app.listen(PORT || 'https://git.heroku.com/fierce-badlands-48978.git', () => {
-    console.log(`Server listening on port ${PORT}|| 'https://git.heroku.com/fierce-badlands-48978.git'...`);
+app.listen(PORT || 'https://fierce-badlands-48978.herokuapp.com', () => {
+    console.log(`Server listening on port ${PORT}|| 'https://fierce-badlands-48978.herokuapp.com'...`);
 });

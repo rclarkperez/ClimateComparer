@@ -5,7 +5,8 @@ const PORT = process.env.PORT || 3003;
 
 
 const Add = () => {
-    //React code
+
+    //React code to update DB*******************
     const [reactCity, setCity]        = useState('');
     const [reactState, setState]      = useState('');
     const [reactResult, setResult]    = useState(''); //includes all climate data 
@@ -14,7 +15,7 @@ const Add = () => {
 
     const addClimate = async () => {
         const newCityClimate = {reactCity, reactState, reactResult};
-        const response = await fetch(PORT, {
+        const response = await fetch(PORT || 'https://fierce-badlands-48978.herokuapp.com', {
             method: 'post',
             body: JSON.stringify(newCityClimate),
             headers: {
@@ -29,7 +30,8 @@ const Add = () => {
         history.push("/");
     };
 
-    //UI for Microservice to fetch city Climate data 
+
+    //UI for Microservice to fetch city Climate data*********** 
     async function sendData() {
         const city = document.getElementById("city").value;
         const state = document.getElementById("state").value;
