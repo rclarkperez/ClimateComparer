@@ -1,4 +1,4 @@
 # Climate Comparer App (Version #1.0.0)
 This app is currently in progress. It is created for my Software Engineering I course at Oregon State University. This app is meant to compare climate data from cities around the world for travelers or those planning to move to allow them extract and compare only the most necessary information and nothing else. The UI is constructed with React and will run off on Netlfiy. 
 
-Microservice: Climate-Data-Microservice (https://github.com/MattWenzel/Climate-Data-Microservice) is integrated in Climate Comparer App to add new city information on the Add Page of the Climate Comparer App. This Microservice was created by fellow Oregon State University student MattWenzel
+Microservice: Climate-Data-Microservice (https://github.com/MattWenzel/Climate-Data-Microservice) is integrated in Climate Comparer App to add new city information on the Add Page of the Climate Comparer App as well as new city information on main page. This Microservice was created by fellow Oregon State University student MattWenzel

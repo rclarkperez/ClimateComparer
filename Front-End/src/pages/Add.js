@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { firestore } from '../components/Firebase';
 import { addDoc, collection } from '@firebase/firestore';
-import { statesUSA } from '../constants/statesUSA';
-import axios from "axios";
+
 
 
 
@@ -39,48 +38,11 @@ const Add = () => {
             });    
         }
     };
-    const getKoppenClimate = async () => {
-        //grab lat and lon
-            let city = reactCity
-            let state = ''
-            let country = reactState
 
-            if (reactCity == ''){
-                return
-            }
-            if (statesUSA.includes(reactState)){
-                state = reactState
-                country = 'us'
-            }
-
-            // console.log(currentCity, currentState)
-
-            const baseURL1 = `https://api.openweathermap.org/geo/1.0/direct?q=${city},${state},${country}&limit=2&appid=3dd6b4b0643fe807a69521e6f5cd399a`
-            
-            await axios.get(baseURL1).then(async(response)=> {
-                // console.log(response)
-                const lat =  response.data[0].lat
-                const lon = response.data[0].lon
-                const first_res = response
-                // console.log('lat: ', lat,'lon: ', lon)
-
-
-            // get koppen climate type
-            const baseURL2 = `http://climateapi.scottpinkelman.com/api/v1/location/${lat}/${lon}`
-            axios.get(baseURL2).then(async(response)=> {
-                // console.log("2nd response", response)
-                const koppen = response.data.return_values[0].zone_description
-                setkoppenClimate(koppen)
-                console.log(koppen)
-                });
-
-            })
-    }
 
 
     useEffect(() => {
         addClimate(reactCity, reactState, reactResult)
-        getKoppenClimate()
 
     }, [reactCity, reactState, reactResult])
 
@@ -146,7 +108,6 @@ const Add = () => {
     }
 
     return (
-   
         <div>
             <input type="text" id="city"  placeholder="Enter city" required/>
             <input type="text" id="state" placeholder="Enter state(US)/Country" required/>

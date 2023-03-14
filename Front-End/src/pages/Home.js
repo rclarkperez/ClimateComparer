@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useHistory } from 'react-router-dom';
 import { firestore } from '../components/Firebase';
-import { collection, addDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { statesUSA } from "../constants/statesUSA";
 import axios from "axios";
 // import Map from "../components/Map";
@@ -21,25 +21,6 @@ const Home = () => {
     
     const similarCities = []
     
-
-
-
-
-    // const [WinterHigh, setWinterHigh] = useState([])
-    // const [WinterLow, setWinterLow] = useState([])
-
-    // const [springHigh, setSpringHigh] = useState([])
-    // const [springLow, setSpringLow] = useState([])
-
-    // const [SummerHigh, setSummerHigh] = useState([])
-    // const [SummerLow, setSummerLow] = useState([])
-
-    // const [FallHigh, setFallHigh] = useState([])
-    // const [FallLow, setFallrLow] = useState([])
-
-
-
-
 
     const change = async (event) => {
         setcurrentCity(event.target.value)
@@ -63,33 +44,20 @@ const Home = () => {
         for (let i =0; i<=climate.length-1; i++){
             //if value is found, iterate though object and create a table 
             if(climate[i].city == currentCity){
-                // console.log('success!', climate[i].result)
                 setcurrentState(climate[i].state)
                 sendData()
                 for (const [key, value] of Object.entries(climate[i].result)) {
-                    // console.log('key:', key, 'value:', value);
                     for (const [somekey, somevalue] of Object.entries(value)) {
-                        // console.log("table data: ", somekey, somevalue)
                     }
-                    // if (key == 'Average high °F (°C)'){
-                    //     console.log('test', value.Jan)
-                    //     // setWinterHigh()
-                    //     // setSpringHigh()
-                    //     // setSummerHigh()
-                    //     // setFallHigh()
-                    // }
-
-
                     currentCityClimateTD.push(key)
                     currentCityClimateTR.push(value)
                 }
             }
-            else{
-                // console.log('failure')
-            }
+            
             }
     }
-
+    // chainged API call to Open Weather API to get lat/lon of city,
+    //then additional call to Scott Pinkelman API to get climate
     const getKoppenClimate = async (koppencity, koppenstate) => {
         //grab lat and lon
             let city = koppencity
@@ -104,32 +72,26 @@ const Home = () => {
                 country = 'us'
             }
 
-            // console.log(currentCity, currentState)
-
             const baseURL1 = `https://api.openweathermap.org/geo/1.0/direct?q=${city},${state},${country}&limit=2&appid=3dd6b4b0643fe807a69521e6f5cd399a`
             
             await axios.get(baseURL1).then(async(response)=> {
-                // console.log(response)
                 const lat =  response.data[0].lat
                 const lon = response.data[0].lon
-                const first_res = response
-                // console.log('lat: ', lat,'lon: ', lon)
 
 
             // get koppen climate type
             const baseURL2 = `http://climateapi.scottpinkelman.com/api/v1/location/${lat}/${lon}`
             axios.get(baseURL2).then(async(response)=> {
-                // console.log("2nd response", response)
                 const koppen = response.data.return_values[0].zone_description
                 if (koppenToggle){
                     return setkoppenClimate(koppen)
                 }
-                // console.log(koppen)
                 });
 
             })
     }
     
+    //grab city image from pixel API
     const cityImage = async () => {
         const pexelClient = createClient('Q5168KkkeznackGWl9pB9HhJbQmnPBnow24iTNaBjX1cPXA945RiDhNq');
         const query = `${currentCity + ',  '+ currentState}`;
@@ -198,8 +160,6 @@ const Home = () => {
         }
 
         const findSimilar =  async(similarCity, similarState) => {
-
-
             console.log(koppenToggle, similarCity)
             setkoppenToggle(false)
             for (let i =0; i<=climate.length-1; i++){
@@ -207,25 +167,18 @@ const Home = () => {
                 let state = ''
                 let country = climate[i].state
 
-
-                // console.log(climate[i].city )
-
-                //extract and compare all climate types
+                //extract and compare all climate types of all cities in added to DB
                 if (statesUSA.includes(city)){
                     state = climate[i].state
                     country = 'us'
                 }
     
-                // console.log(currentCity, currentState)
-    
                 const baseURL1 = `https://api.openweathermap.org/geo/1.0/direct?q=${city},${state},${country}&limit=2&appid=3dd6b4b0643fe807a69521e6f5cd399a`
                 
                 await axios.get(baseURL1).then(async(response)=> {
-                    // console.log(response)
                     const lat =  response.data[0].lat
                     const lon = response.data[0].lon
                     const first_res = response
-                    // console.log('lat: ', lat,'lon: ', lon)
     
     
                 // get koppen climate type
@@ -247,8 +200,7 @@ const Home = () => {
         }
 
     
-      // Start the fetch operation as soon as
-    // the page loads
+      // Start these operations as soon as the page loads
     useEffect(() => {
         FetchClimates();
         DisplayData();
@@ -272,7 +224,7 @@ const Home = () => {
 
         <div className="column" id="left-column">   
             <div>
-                ****Map Goes Here****
+                ****Map Coming Soon****
                 <div id="map" ></div>
             </div>
         </div>
