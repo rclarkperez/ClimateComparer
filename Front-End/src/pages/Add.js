@@ -1,37 +1,90 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { firestore } from '../components/Firebase';
+import { addDoc, collection } from '@firebase/firestore';
+import { statesUSA } from '../constants/statesUSA';
+import axios from "axios";
 
-const PORT = process.env.PORT || 3003;
+
 
 
 const Add = () => {
-
-    //React code to update DB*******************
+    //React code to update DB *******************
     const [reactCity, setCity]        = useState('');
     const [reactState, setState]      = useState('');
     const [reactResult, setResult]    = useState(''); //includes all climate data 
+    const [koppenClimate, setkoppenClimate] = useState('')
+
     const history = useNavigate();
 
 
-    const addClimate = async () => {
-        const newCityClimate = {reactCity, reactState, reactResult};
-        const response = await fetch(PORT || 'https://fierce-badlands-48978.herokuapp.com', {
-            method: 'post',
-            body: JSON.stringify(newCityClimate),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        if(response.status === 201){
-            alert("Successfully added the City Climate!");
-        } else {
-            alert(`Failed to add cityClimate, status code = ${response.status}`);
+    const addClimate = async (reactCity, reactState, reactResult) => {
+        const ref = collection(firestore, "cityClimate")
+
+        let data = {
+            city: reactCity,
+            state: reactState,
+            result: reactResult
         }
-        history.push("/");
+        console.log(data.city, data.state)
+
+        if (!data.city == '' && !data.state == '' && !data.result == '') {
+
+            await addDoc(ref, data)
+            .then(() => {
+                alert("Data Successfully Submitted");
+            })
+            .catch((error) => {
+                alert(error("Error adding document: ", error));
+            });    
+        }
     };
+    const getKoppenClimate = async () => {
+        //grab lat and lon
+            let city = reactCity
+            let state = ''
+            let country = reactState
+
+            if (reactCity == ''){
+                return
+            }
+            if (statesUSA.includes(reactState)){
+                state = reactState
+                country = 'us'
+            }
+
+            // console.log(currentCity, currentState)
+
+            const baseURL1 = `https://api.openweathermap.org/geo/1.0/direct?q=${city},${state},${country}&limit=2&appid=3dd6b4b0643fe807a69521e6f5cd399a`
+            
+            await axios.get(baseURL1).then(async(response)=> {
+                // console.log(response)
+                const lat =  response.data[0].lat
+                const lon = response.data[0].lon
+                const first_res = response
+                // console.log('lat: ', lat,'lon: ', lon)
 
 
-    //UI for Microservice to fetch city Climate data*********** 
+            // get koppen climate type
+            const baseURL2 = `http://climateapi.scottpinkelman.com/api/v1/location/${lat}/${lon}`
+            axios.get(baseURL2).then(async(response)=> {
+                // console.log("2nd response", response)
+                const koppen = response.data.return_values[0].zone_description
+                setkoppenClimate(koppen)
+                console.log(koppen)
+                });
+
+            })
+    }
+
+
+    useEffect(() => {
+        addClimate(reactCity, reactState, reactResult)
+        getKoppenClimate()
+
+    }, [reactCity, reactState, reactResult])
+
+    //UI for Microservice to fetch city Climate data constructed by partner in JS *********** 
     async function sendData() {
         const city = document.getElementById("city").value;
         const state = document.getElementById("state").value;
@@ -40,10 +93,7 @@ const Add = () => {
             city: city,
             state: state
         };
-        setState(state)
-        setCity(city)
-
-
+       
         const response = await fetch("http://localhost:3001/weather", {
             method: "POST",
             headers: {
@@ -51,10 +101,12 @@ const Add = () => {
             },
             body: JSON.stringify(data)
         });
+       
 
         const result = await response.json();
+        setState(state)
+        setCity(city)
         setResult(result)
-        // console.log("Result:", reactCity, reactState, reactResult)
 
         // Clear any existing table
         const resultDiv = document.getElementById("result");
@@ -91,14 +143,13 @@ const Add = () => {
                 dataRow.appendChild(dataCell);
             });
         });
-        
     }
 
     return (
    
         <div>
-            <input type="text" id="city" placeholder="Enter city"/>
-            <input type="text" id="state" placeholder="Enter state"/>
+            <input type="text" id="city"  placeholder="Enter city" required/>
+            <input type="text" id="state" placeholder="Enter state(US)/Country" required/>
             <button onClick={sendData}>Submit</button>
             <div id="result"></div>
         </div>

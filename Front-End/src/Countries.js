@@ -1,1 +1,0 @@
-//List of all world cities in the App

@@ -13,6 +13,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 
 
+
 const App = () => {
   
   return (
@@ -27,8 +28,8 @@ const App = () => {
     <BrowserRouter>
       <div>
         <Routes>
-          <Route exact path='/' exact element={<Home/>}/>
-          <Route exact path='/add' exact element={<Add/>}/>
+          <Route exact path='/'  element={<Home/>}/>
+          <Route exact path='/add'  element={<Add/>}/>
         </Routes>
       </div>
     </BrowserRouter>
